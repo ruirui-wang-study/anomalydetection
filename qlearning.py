@@ -57,9 +57,12 @@ class QLearning:
         self.q_table = np.zeros((len(state_space), len(action_space)))
 
     def choose_action(self, state):
+        # state是当前状态
         state_index = self.state_space.index(state)
         q_values = self.q_table[state_index, :]
+        # 获取最大Q值
         max_q_value = np.max(q_values)
+        # 最大Q值对应动作
         max_action_indices = np.where(q_values == max_q_value)[0]
         chosen_action_index = np.random.choice(max_action_indices)
         chosen_action = self.action_space[chosen_action_index]
@@ -67,13 +70,16 @@ class QLearning:
 
     def update_q_table(self, state, action, next_state, reward):
         state_index = self.state_space.index(state)
+        # 这里的state可以用序号表示
         next_state_index = self.state_space.index(next_state)
         action_index = self.action_space.index(action)
+        # 下个状态当前最大q值
         max_q_value = np.max(self.q_table[next_state_index, :])
         current_q_value = self.q_table[state_index, action_index]
         new_q_value = (1 - self.learning_rate) * current_q_value + self.learning_rate * (reward + self.discount_factor * max_q_value)
         self.q_table[state_index, action_index] = new_q_value
-
+      
+    
 # 定义决策树特征选择函数
 def select_features(X, y, feature_combination):
     selected_X = X[:, feature_combination]
@@ -112,7 +118,7 @@ def detect_anomalies(q_learning, X, y):
 #               [3, 4, 5, 6],
 #               [4, 5, 6, 7]])
 # y = np.array([0, 0, 1, 1])
-
+matrix = [[0 for _ in range(79)] for _ in range(10)]
 # 定义状态空间和动作空间
 state_space = [tuple([])]
 action_space = list(range(X.shape[1]))
