@@ -30,40 +30,44 @@ from sklearn.preprocessing import StandardScaler, LabelEncoder, OneHotEncoder
 
 import numpy as np
 
-# Load dataset
-data = pd.read_csv("dataset.csv",sep=',',skipinitialspace=True)
-print(data.columns)
 
 
-# Drop rows with NaN or infinite values
-data = data.replace([np.inf, -np.inf], np.nan)
-data = data.dropna()
+def dataprocess():
+    # Load dataset
+    data = pd.read_csv("dataset.csv",sep=',',skipinitialspace=True)
+    # print(data.columns)   
+    # Drop rows with NaN or infinite values
+    data = data.replace([np.inf, -np.inf], np.nan)
+    data = data.dropna()
 
-# Standardize numerical columns
-numerical_cols = data.select_dtypes(include=[np.number]).columns
-scaler = StandardScaler()
-data[numerical_cols] = scaler.fit_transform(data[numerical_cols])
+    # Standardize numerical columns
+    numerical_cols = data.select_dtypes(include=[np.number]).columns
+    scaler = StandardScaler()
+    data[numerical_cols] = scaler.fit_transform(data[numerical_cols])
 
-# Encode non-numerical columns
-categorical_cols = data.select_dtypes(exclude=[np.number]).columns
-le = LabelEncoder()
-for col in categorical_cols:
-    data[col] = le.fit_transform(data[col])
+    # Encode non-numerical columns
+    categorical_cols = data.select_dtypes(exclude=[np.number]).columns
+    le = LabelEncoder()
+    for col in categorical_cols:
+        data[col] = le.fit_transform(data[col])
 
-# Apply PCA for feature extraction
-n_components = 2  # Set the number of principal components
-pca = PCA(n_components=n_components)
-X = data.drop(columns=['Label'])
-y = data['Label']
-X = pca.fit_transform(X)
+    # Apply PCA for feature extraction
+    X = data.drop(columns=['Label'])
+    y = data['Label']
+    # Apply PCA for feature extraction with 10 components
+    n_components = 10
+    pca = PCA(n_components=n_components)
+    X_pca = pca.fit_transform(X)
+    return X_pca,y
 
-# Now X and y are ready to be used in the next steps
+# Convert PCA-transformed data back to DataFrame with column names
+# columns_pca = [f"PC{i}" for i in range(1, n_components + 1)]
+# X_pca_df = pd.DataFrame(data=X_pca, columns=columns_pca)
+# print(X_pca_df.head())
 
 
 
-
-
-'Flow Duration',
+# 'Flow Duration',
 
 # # Step 1: Remove rows with NaN and infinity values
 # data = data.dropna()  # Remove rows with NaN values

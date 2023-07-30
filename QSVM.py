@@ -52,23 +52,11 @@ class QLearning:
             ba = balanced_accuracy_score(y_val, y_pred)
 
             reward = pr + re + fs + ac + ba
+            print(reward)
 
             self.learn(str(X_train), action, reward)
-
-# Load dataset
-data = pd.read_csv('dataset.csv')
-
-# Preprocessing
-y = data[' Label']
-X = data.drop(columns=[' Label'])
-# Standardize the features
-scaler = StandardScaler()
-X = scaler.fit_transform(X)
-
-# Apply PCA for dimensionality reduction
-n_components = 2
-pca = PCA(n_components=n_components)
-X = pca.fit_transform(X)
+import datapreprocessing
+X,y=datapreprocessing.dataprocess()
 
 # Split the data
 X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.3, random_state=42)
