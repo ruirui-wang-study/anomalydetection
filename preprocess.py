@@ -14,7 +14,7 @@ from sklearn import preprocessing
 def loadData(fromPath, LabelColumnName, labelCount
              ):  #This method to read the csv file and change the label feature
 
-    data_ = pd.read_csv(fromPath,sep=',')
+    data_ = pd.read_csv(fromPath,sep=',',skipinitialspace=True)
 
     if labelCount == 2:
         dataset = data_
@@ -37,7 +37,12 @@ def loadData(fromPath, LabelColumnName, labelCount
     # duration.plot()
 
     # featureList = dataset.loc[:,[' Flow Duration','Flow Bytes/s',' Flow Packets/s',' Flow IAT Mean',' Fwd IAT Mean','Fwd Packets/s',' Bwd Packets/s',' Packet Length Mean','Init_Win_bytes_forward',' Init_Win_bytes_backward']]
-    featureList=dataset.drop([LabelColumnName], axis=1)
+    # 2. 提取指定列作为特征
+    selected_columns = ['EtherType', 'Protocol', 'CumIPv4Flag_X', 'TcpDstPort', 'UdpDstPort',
+                        'CumPacketSize', 'FlowDuration', 'MaxPacketSize', 'MinPacketSize',
+                        'NumPackets', 'CumTcpFlag_X']
+    featureList = dataset[selected_columns]
+    # featureList=dataset.drop([LabelColumnName], axis=1)
     return dataset, featureList
 
 
