@@ -44,7 +44,6 @@ class QLearning:
             clf.fit(X_train, y_train)
 
             y_pred = clf.predict(X_val)
-
             pr = precision_score(y_val, y_pred)
             re = recall_score(y_val, y_pred)
             fs = f1_score(y_val, y_pred)
@@ -55,8 +54,8 @@ class QLearning:
             print(reward)
 
             self.learn(str(X_train), action, reward)
-import datapreprocessing
-X,y=datapreprocessing.dataprocess()
+import RF_feature
+X,y=RF_feature.preprocess()
 
 # Split the data
 X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.3, random_state=42)
