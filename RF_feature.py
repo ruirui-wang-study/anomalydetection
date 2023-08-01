@@ -8,6 +8,16 @@ from sklearn.ensemble import RandomForestClassifier
 def preprocess():
     # Load dataset
     data = pd.read_csv("dataset.csv")
+    data[' Label'] = data[' Label'].apply({
+            'DoS':
+            'Anormal',
+            'BENIGN':
+            'Normal',
+            'DDoS':
+            'Anormal',
+            'PortScan':
+            'Anormal'
+        }.get)
 
     # Drop rows with NaN or infinite values
     data = data.replace([np.inf, -np.inf], np.nan)

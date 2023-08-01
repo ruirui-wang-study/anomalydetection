@@ -9,26 +9,26 @@
 # 特征选择与模型构建：在训练完成后，根据学习到的策略选择最相关的特征子集。然后，使用这些选择的特征来构建模型，如分类器、聚类器或异常检测器等。
 
 
-对已有模型进行自适应性变化的方法
-已有sdn流表下发的方式
+# 对已有模型进行自适应性变化的方法
+# 已有sdn流表下发的方式
 
-动态网络环境（找出关键的特征）怎样影响异常流量的检测
-流量的变化与异常检测
-动态：拓扑、节点、拥塞 无关
-攻击类型的动态性-》机器学习算法的选择
-各种方法在异常检测中的研究现状
-流量变化的典型场景（物联网等
-机器学习依赖于已有数据集（问题点）--》强化学习
-机器学习模型在线优化方法
-sdn中对异常流量的检测方法
-sdn怎么动态改变数据平面的转发（下发转发表 已有
-控制平面用哪个模型效果好（作对比）
-控制平面里模型的更新能力和能不能转化为转发表
-数据平面    轻量级最优特征提取模型
-实现模型的限制
-qlearning在数据平面的实现
-特征怎么传到控制平面
-是否适用
+# 动态网络环境（找出关键的特征）怎样影响异常流量的检测
+# 流量的变化与异常检测
+# 动态：拓扑、节点、拥塞 无关
+# 攻击类型的动态性-》机器学习算法的选择
+# 各种方法在异常检测中的研究现状
+# 流量变化的典型场景（物联网等
+# 机器学习依赖于已有数据集（问题点）--》强化学习
+# 机器学习模型在线优化方法
+# sdn中对异常流量的检测方法
+# sdn怎么动态改变数据平面的转发（下发转发表 已有
+# 控制平面用哪个模型效果好（作对比）
+# 控制平面里模型的更新能力和能不能转化为转发表
+# 数据平面    轻量级最优特征提取模型
+# 实现模型的限制
+# qlearning在数据平面的实现
+# 特征怎么传到控制平面
+# 是否适用
 
 
 
@@ -37,13 +37,18 @@ import numpy as np
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split
 import preprocess
+import RF_feature
+# fromPath = "dataset.csv"
+# LabelColumnName = ' Label'
+# dataset, featureList = preprocess.loadData(fromPath, LabelColumnName, 2)
+X, y = RF_feature.preprocess()
 
-fromPath = "dataset.csv"
-LabelColumnName = ' Label'
-dataset, featureList = preprocess.loadData(fromPath, LabelColumnName, 2)
-X, y = preprocess.datasetSplit(dataset, LabelColumnName)
-X_train, X_test, y_train, y_test = preprocess.train_test_dataset(dataset)
-
+X_train, X_test, y_train, y_test = train_test_split(X,
+                                                        y,
+                                                        train_size=0.7,
+                                                        test_size=0.3,
+                                                        random_state=0,
+                                                        stratify=y)
 
 
 
@@ -79,7 +84,7 @@ class QLearning:
         new_q_value = (1 - self.learning_rate) * current_q_value + self.learning_rate * (reward + self.discount_factor * max_q_value)
         self.q_table[state_index, action_index] = new_q_value
     
-    def reward()
+    # def reward()
     
 # 定义决策树特征选择函数
 def select_features(X, y, feature_combination):
