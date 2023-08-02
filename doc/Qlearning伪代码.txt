@@ -1,0 +1,19 @@
+用latex
+
+Inputs: F;L; for a state-action pair (s,a) Vs属于S, a属于A,then initialize a Q-table entry with Q(s,a) value arbitrarily,a and e, respectively.
+begin
+Repeat the following loop for each episode.
+loop
+Current state Si.
+Execute action ai according an exploratory policy (e)
+Obtain the immediate reward ri and new state Si+1.
+Update Q(Si,ai) by using Equation 8.Replace si  Si+l.
+end loop
+Outputs 元*(s) = argmaxa Q(s,a)
+
+
+
+
+输入：
+状态空间C值（离散）
+动作空间{增加，减少，不变}
