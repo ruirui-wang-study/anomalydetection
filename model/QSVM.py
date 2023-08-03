@@ -21,6 +21,7 @@ from sklearn.model_selection import cross_val_score, train_test_split
 from sklearn.decomposition import PCA
 from sklearn.svm import SVC
 from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_score, balanced_accuracy_score
+import basicmetric
 
 class QLearning:
     # def __init__(self, learning_rate=0.5, discount_factor=0.9, exploration_rate=0.5, num_iterations=500):
@@ -120,12 +121,13 @@ action_space = np.array([-1, 0, 1])  # 动作空间为 {-1, 0, 1}
 # 定义Q-learning参数
 learning_rate = 0.1
 discount_factor = 0.9
-num_episodes = 100  # 迭代次数
-
+num_episodes = 10  # 迭代次数
+state = 0.1
 # 迭代更新Q表
 for episode in range(num_episodes):
+    print("episode:",episode)
     # 初始化状态，这里假设状态初始值为0.1
-    state = 0.1
+    
 
     # 选择动作
     action_idx = np.argmax(Q[state_space == state, :])  # 根据当前状态选择最优动作的索引
@@ -148,18 +150,21 @@ for episode in range(num_episodes):
     # 获取新状态
     new_state = state_space[new_state_idx]
 
+
     # 更新Q表
     # 这里假设在执行动作后，得到了奖励 reward
     clf = svm.SVC(kernel='rbf',C=new_state,gamma=0.95)
-    scores = cross_val_score(clf, X, y, cv=5)
-    reward = np.mean(scores)
+    precision,recall,f1,accuracy,false_alarm_rate=basicmetric.calMetrics(clf,X_train,y_train,X_test,y_test)
+    # scores = cross_val_score(clf, X, y, cv=5)
+    score=0.25*precision+0.25*recall+0.25*f1+0.25*accuracy+0.25*false_alarm_rate
+    reward = np.mean(score)
 
     # 计算新状态下的最大Q值
     max_q_new_state = np.max(Q[new_state_idx, :])
 
     # 更新Q值
     Q[state_space == state, action_idx] += learning_rate * (reward + discount_factor * max_q_new_state - Q[state_space == state, action_idx])
-
+    print(state,action,Q[state_space == state, action_idx])
     # 更新状态
     state = new_state
 

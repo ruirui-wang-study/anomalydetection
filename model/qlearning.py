@@ -36,7 +36,6 @@
 import numpy as np
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split
-import preprocess
 import RF_feature
 # fromPath = "dataset.csv"
 # LabelColumnName = ' Label'

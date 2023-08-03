@@ -19,23 +19,25 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 # 创建决策树分类器
 clf = DecisionTreeClassifier()
 
+def calMetrics(clf,X_train,y_train,X_test,y_test):
 # 在训练集上训练分类器
-clf.fit(X_train, y_train)
+    clf.fit(X_train, y_train)
 
-# 在测试集上进行预测
-y_pred = clf.predict(X_test)
+    # 在测试集上进行预测
+    y_pred = clf.predict(X_test)
 
-# 计算性能指标
-precision = precision_score(y_test, y_pred)
-recall = recall_score(y_test, y_pred)
-f1 = f1_score(y_test, y_pred)
-accuracy = accuracy_score(y_test, y_pred)
-conf_matrix = confusion_matrix(y_test, y_pred)
-tn, fp, fn, tp = conf_matrix.ravel()
-false_alarm_rate = fp / (fp + tn)
+    # 计算性能指标
+    precision = precision_score(y_test, y_pred)
+    recall = recall_score(y_test, y_pred)
+    f1 = f1_score(y_test, y_pred)
+    accuracy = accuracy_score(y_test, y_pred)
+    conf_matrix = confusion_matrix(y_test, y_pred)
+    tn, fp, fn, tp = conf_matrix.ravel()
+    false_alarm_rate = fp / (fp + tn)
 
-print("Precision:", precision)
-print("Recall:", recall)
-print("F1-score:", f1)
-print("Accuracy:", accuracy)
-print("False Alarm Rate:", false_alarm_rate)
+    print("Precision:", precision)
+    print("Recall:", recall)
+    print("F1-score:", f1)
+    print("Accuracy:", accuracy)
+    print("False Alarm Rate:", false_alarm_rate)
+    return precision,recall,f1,accuracy,false_alarm_rate
