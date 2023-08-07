@@ -13,6 +13,7 @@
 
 # 这是一个非常基础的实现，你可能需要对其进行调整以更好地适应你的特定问题。例如，你可能需要调整学习率和奖励函数，或者添加一个ε-greedy策略来平衡探索和开发。你也可能需要设置一个更适合你问题的C参数的范围。
 
+import random
 import numpy as np
 import pandas as pd
 from sklearn import svm
@@ -23,6 +24,8 @@ from sklearn.svm import SVC
 from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_score, balanced_accuracy_score
 import basicmetric
 
+FORWARD = 0
+BACKWARD = 1
 class QLearning:
     # def __init__(self, learning_rate=0.5, discount_factor=0.9, exploration_rate=0.5, num_iterations=500):
     #     self.learning_rate = learning_rate
@@ -45,6 +48,70 @@ class QLearning:
             state_action = self.q_table.loc[state, :]
             action = state_action['C'].idxmax()
         return action
+    
+    def take_action(self,action):
+        if action == 1:
+            self.new_state_idx = np.argmin(np.abs(state_space - state)) + 1  # 下一个状态的索引
+        elif action == -1:
+            self.new_state_idx = np.argmin(np.abs(state_space - state)) - 1  # 上一个状态的索引
+        else:
+            self.new_state_idx = np.argmin(np.abs(state_space - state))  # 保持当前状态的索引
+        clf = svm.SVC(kernel='rbf',C=new_state,gamma=0.95)
+        precision,recall,f1,accuracy,false_alarm_rate=basicmetric.calMetrics(clf,X_train,y_train,X_test,y_test)
+        # scores = cross_val_score(clf, X, y, cv=5)
+        score=0.25*precision+0.25*recall+0.25*f1+0.25*accuracy+0.25*false_alarm_rate
+        reward = np.mean(score)
+        
+    def get_next_action(self, state):
+        if random.random() > self.exploration_rate: # Explore (gamble) or exploit (greedy)
+            return self.greedy_action(state)
+        else:
+            return self.random_action()
+    def greedy_action(self, state):
+        # Is FORWARD reward is bigger?
+        if self.q_table[FORWARD][state] > self.q_table[BACKWARD][state]:
+            return FORWARD
+        # Is BACKWARD reward is bigger?
+        elif self.q_table[BACKWARD][state] > self.q_table[FORWARD][state]:
+            return BACKWARD
+        # Rewards are equal, take random action
+        return FORWARD if random.random() < 0.5 else BACKWARD
+    def random_action(self):
+        return FORWARD if random.random() < 0.5 else BACKWARD
+    
+    
+    def update_state(self):
+        # 确保新状态索引不超出边界
+        self.new_state_idx = max(0, min(new_state_idx, num_states - 1))
+        # 获取新状态
+        self.new_state = state_space[new_state_idx]
+        
+    def update(self, old_state, new_state, action, reward):
+        # 更新Q表
+        # 这里假设在执行动作后，得到了奖励 reward
+        
+
+        # 计算新状态下的最大Q值
+        max_q_new_state = np.max(Q[new_state_idx, :])
+
+        # 更新Q值
+        Q[state_space == state, action_idx] += learning_rate * (reward + discount_factor * max_q_new_state - Q[state_space == state, action_idx])
+        
+        
+        # # Old Q-table value
+        # old_value = self.q_table[action][old_state]
+        # # What would be our best next action?
+        # future_action = self.greedy_action(new_state)
+        # # What is reward for the best next action?
+        # future_reward = self.q_table[future_action][new_state]
+
+        # # Main Q-table updating algorithm
+        # new_value = old_value + self.learning_rate * (reward + self.discount * future_reward - old_value)
+        # self.q_table[action][old_state] = new_valuex
+
+        # Finally shift our exploration_rate toward zero (less gambling)
+        if self.exploration_rate > 0:
+            self.exploration_rate -= self.exploration_delta
 
     def learn(self, state, action, reward):
         if state not in self.q_table.index:
@@ -63,18 +130,7 @@ class QLearning:
         for i in range(self.num_iterations):
             action = self.choose_action(str(X_train))
 
-            clf = SVC(C=action)
-            clf.fit(X_train, y_train)
-
-            y_pred = clf.predict(X_val)
-            pr = precision_score(y_val, y_pred)
-            re = recall_score(y_val, y_pred)
-            fs = f1_score(y_val, y_pred)
-            ac = accuracy_score(y_val, y_pred)
-            ba = balanced_accuracy_score(y_val, y_pred)
-
-            reward = pr + re + fs + ac + ba
-            print(reward)
+            
 
             self.learn(str(X_train), action, reward)
 
@@ -129,8 +185,9 @@ for episode in range(num_episodes):
     # 初始化状态，这里假设状态初始值为0.1
     
 
-    # 选择动作
+    # 选择动作  这里应该是根据e- greedy策略选择动作而不是选择最优的
     action_idx = np.argmax(Q[state_space == state, :])  # 根据当前状态选择最优动作的索引
+    
     action = action_space[action_idx]
 
     # 执行动作并观察奖励和新状态
