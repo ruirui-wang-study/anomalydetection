@@ -177,7 +177,8 @@ action_space = np.array([-1, 0, 1])  # 动作空间为 {-1, 0, 1}
 # 定义Q-learning参数
 learning_rate = 0.1
 discount_factor = 0.9
-num_episodes = 10  # 迭代次数
+num_episodes = 100  # 迭代次数
+exploration_rate=0.5
 state = 0.1
 # 迭代更新Q表
 for episode in range(num_episodes):
@@ -186,12 +187,16 @@ for episode in range(num_episodes):
     
 
     # 选择动作  这里应该是根据e- greedy策略选择动作而不是选择最优的
-    action_idx = np.argmax(Q[state_space == state, :])  # 根据当前状态选择最优动作的索引
+    # action_idx = np.argmax(Q[state_space == state, :])  # 根据当前状态选择最优动作的索引
     
-    action = action_space[action_idx]
-
+    # action = action_space[action_idx]
+    if np.random.uniform() < exploration_rate or state not in Q.index:
+        action_idx = np.random.uniform(1, 10)-1  # randomly select C value
+    else:
+        action_idx = np.argmax(Q[state_space == state, :])
     # 执行动作并观察奖励和新状态
     # 这里省略执行动作和观察奖励的过程，具体应根据问题实际情况实现
+    action = action_space[action_idx]
 
     # 更新状态
     if action == 1:
