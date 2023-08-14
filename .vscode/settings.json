@@ -1,0 +1,7 @@
+{
+    "python.analysis.extraPaths": [
+        "./data",
+        "./comparisonExperiments/pso-svm",
+        "./model/comparisonExperiments/pso-svm"
+    ]
+}

@@ -1,0 +1,5 @@
+*.csv
+./vscode/
+model/__pycache__/
+
+!.gitignore

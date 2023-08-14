@@ -4,21 +4,21 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.calibration import LabelEncoder
 from sklearn.ensemble import RandomForestClassifier
 # 读取数据
-data = pd.read_csv('dataset.csv')
+data = pd.read_csv('./dataset.csv')
 # 对每种标签进行抽样,每种标签只留下20%的数据样本
-data = data.groupby(' Label').apply(lambda group: group.sample(frac=0.2))
+data = data.groupby(' Label').apply(lambda group: group.sample(frac=0.1))
 
 # 重置索引
 data = data.reset_index(drop=True)
 print(set(data[' Label']))
-data[' Label'] = data[' Label'].apply({
-            'DoS Slowhttptest':'Anormal',
-            'BENIGN':'Normal',
-            'DoS Hulk':'Anormal',
-            'Heartbleed':'Anormal',
-            'DoS GoldenEye':'Anormal',
-            'DoS slowloris':'Anormal'
-        }.get)
+# data[' Label'] = data[' Label'].apply({
+#             'DoS Slowhttptest':'Anormal',
+#             'BENIGN':'Normal',
+#             'DoS Hulk':'Anormal',
+#             'Heartbleed':'Anormal',
+#             'DoS GoldenEye':'Anormal',
+#             'DoS slowloris':'Anormal'
+#         }.get)
 
 # 删除带有空值和无穷值的行
 data = data.replace([np.inf, -np.inf], np.nan)
