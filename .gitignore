@@ -1,5 +1,6 @@
 *.csv
 .vscode
+datasets/
 */__pycache__
 
 !.gitignore
