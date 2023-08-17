@@ -30,6 +30,14 @@ Recall = TP / (TP + FN)
 F1 = 2 _ (Precision _ Recall) / (Precision + Recall)
 将本设计与粒子群优化算法、遗传算法优化后的 svm 进行对比实验，说明优化效果
 
+评估指标
+收敛速度：同一数据集上不同优化算法的收敛曲线 不同算法在不同数据集上的收敛曲线（对比适应性）
+收敛曲线画图参考https://blog.csdn.net/qq_41645987/article/details/109148615
+images:
+损失函数曲线图（每个epoch一个loss measure）
+收敛曲线图
+模型散点图
+
 数据集
 在CICIDS2019、CICIDS2017和NSL-KDD三个数据集上进行实验，对比在不同数据集上的收敛效果
 
